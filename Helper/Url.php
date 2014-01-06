@@ -18,13 +18,12 @@
 
 namespace Engine\Helper;
 
-use Engine\HelperInterface;
+use Engine\Helper;
 use Phalcon\DI;
-use Phalcon\DiInterface;
 use Phalcon\Tag;
 
 /**
- * Paginator url helper.
+ * Current url helper.
  *
  * @category  PhalconEye
  * @package   Engine\Helper
@@ -33,21 +32,28 @@ use Phalcon\Tag;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class PaginatorUrl extends Tag implements HelperInterface
+class Url extends Helper
 {
     /**
-     * Execute helper.
-     *
-     * @param DiInterface $di   Dependency injection.
-     * @param array       $args Helper arguments.
+     * Get current url.
      *
      * @return mixed
-     * @todo: Refactor helpers.
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    static public function _(DiInterface $di, array $args)
+    protected function _currentUrl()
     {
-        $page = (isset($args[0]) ? $args[0] : 1);
+        return $this->getDI()->get('request')->get('_url');
+    }
+
+    /**
+     * Get url for paginator.
+     *
+     * @param null|int $pageNumber Current page number.
+     *
+     * @return string
+     */
+    protected function _paginatorUrl($pageNumber = null)
+    {
+        $page = (!empty($pageNumber) ? $pageNumber : 1);
         $vars = [];
         $url = '/';
         foreach ($_GET as $key => $get) {
