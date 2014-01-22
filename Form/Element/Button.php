@@ -19,10 +19,11 @@
 namespace Engine\Form\Element;
 
 use Engine\Form\AbstractElement;
+use Engine\Form\Behaviour\TranslationBehaviour;
 use Engine\Form\ElementInterface;
 
 /**
- * Form element - Text area.
+ * Form element - Button.
  *
  * @category  PhalconEye
  * @package   Engine\Form\Element
@@ -31,8 +32,63 @@ use Engine\Form\ElementInterface;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class Button extends AbstractElement implements ElementInterface
 {
+    use TranslationBehaviour;
+
+    /**
+     * If element is need to be rendered in default layout.
+     *
+     * @return bool
+     */
+    public function useDefaultLayout()
+    {
+        return false;
+    }
+
+    /**
+     * If element is need to be rendered in default layout.
+     *
+     * @return bool
+     */
+    public function isIgnored()
+    {
+        return true;
+    }
+
+    /**
+     * Get allowed options for this element.
+     *
+     * @return array
+     */
+    public function getAllowedOptions()
+    {
+        return ['htmlTemplate', 'label', 'isSubmit'];
+    }
+
+    /**
+     * Get element default options.
+     *
+     * @return array
+     */
+    public function getDefaultOptions()
+    {
+        return ['isSubmit' => true];
+    }
+
+    /**
+     * Get element default attribute.
+     *
+     * @return array
+     */
+    public function getDefaultAttributes()
+    {
+        return array_merge(
+            parent::getDefaultAttributes(),
+            ($this->getOption('isSubmit') ? ['type' => 'submit', 'class' => 'btn btn-primary'] : ['class' => 'btn'])
+        );
+    }
+
     /**
      * Get element html template.
      *
@@ -40,19 +96,7 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function getHtmlTemplate()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
+        return $this->getOption('htmlTemplate', '<button' . $this->_renderAttributes() . '>%s</button>');
     }
 
     /**
@@ -62,9 +106,12 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function render()
     {
+        if (!$this->getAttribute('value') && $this->getValue()) {
+            $this->setAttribute('value', $this->getValue());
+        }
         return sprintf(
             $this->getHtmlTemplate(),
-            $this->getValue()
+            $this->__($this->getOption('label'))
         );
     }
 }

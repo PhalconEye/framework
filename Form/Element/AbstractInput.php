@@ -22,17 +22,34 @@ use Engine\Form\AbstractElement;
 use Engine\Form\ElementInterface;
 
 /**
- * Form element - Text area.
+ * Form element - input.
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Form\Element\Abstract
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+abstract class AbstractInput extends AbstractElement implements ElementInterface
 {
+    /**
+     * Get this input element type.
+     *
+     * @return string
+     */
+    abstract public function getInputType();
+
+    /**
+     * Get element default attribute.
+     *
+     * @return array
+     */
+    public function getDefaultAttributes()
+    {
+        return ['id' => $this->getName(), 'name' => $this->getName(), 'type' => $this->getInputType()];
+    }
+
     /**
      * Get element html template.
      *
@@ -40,19 +57,7 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function getHtmlTemplate()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
+        return $this->getOption('htmlTemplate', '<input' . $this->_renderAttributes() . ' value="%s">');
     }
 
     /**
@@ -66,5 +71,17 @@ class TextArea extends AbstractElement implements ElementInterface
             $this->getHtmlTemplate(),
             $this->getValue()
         );
+    }
+
+    /**
+     * Sets the element option.
+     *
+     * @param string $value Element value.
+     *
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        return parent::setValue(htmlentities($value));
     }
 }

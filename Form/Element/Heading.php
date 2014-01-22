@@ -19,10 +19,11 @@
 namespace Engine\Form\Element;
 
 use Engine\Form\AbstractElement;
+use Engine\Form\Behaviour\TranslationBehaviour;
 use Engine\Form\ElementInterface;
 
 /**
- * Form element - Text area.
+ * Form element - Heading.
  *
  * @category  PhalconEye
  * @package   Engine\Form\Element
@@ -31,8 +32,60 @@ use Engine\Form\ElementInterface;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class Heading extends AbstractElement implements ElementInterface
 {
+    use TranslationBehaviour;
+
+    /**
+     * Get allowed options for this element.
+     *
+     * @return array
+     */
+    public function getAllowedOptions()
+    {
+        return ['htmlTemplate', 'tag', 'content'];
+    }
+
+    /**
+     * If element is need to be rendered in default layout.
+     *
+     * @return bool
+     */
+    public function useDefaultLayout()
+    {
+        return false;
+    }
+
+    /**
+     * If element is need to be rendered in default layout.
+     *
+     * @return bool
+     */
+    public function isIgnored()
+    {
+        return true;
+    }
+
+    /**
+     * Get element default options.
+     *
+     * @return array
+     */
+    public function getDefaultOptions()
+    {
+        return ['tag' => 'h2'];
+    }
+
+    /**
+     * Get element default attribute.
+     *
+     * @return array
+     */
+    public function getDefaultAttributes()
+    {
+        return array_merge(parent::getDefaultAttributes(), ['class' => 'form_element_heading']);
+    }
+
     /**
      * Get element html template.
      *
@@ -40,23 +93,11 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function getHtmlTemplate()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
+        return $this->getOption('htmlTemplate', '<%s' . $this->_renderAttributes() . '>%s</%s>');
     }
 
     /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
-    }
-
-    /**
-     * Render element.
+     * Render this element.
      *
      * @return string
      */
@@ -64,7 +105,9 @@ class TextArea extends AbstractElement implements ElementInterface
     {
         return sprintf(
             $this->getHtmlTemplate(),
-            $this->getValue()
+            $this->getOption('tag'),
+            $this->__($this->getValue()),
+            $this->getOption('tag')
         );
     }
 }

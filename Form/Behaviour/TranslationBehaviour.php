@@ -16,55 +16,33 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Form\Behaviour;
 
-use Engine\Form\AbstractElement;
-use Engine\Form\ElementInterface;
+use Engine\DependencyInjection;
+use Phalcon\DI;
 
 /**
- * Form element - Text area.
+ * Form translation trait.
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Form\Behaviour
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+trait TranslationBehaviour
 {
     /**
-     * Get element html template.
+     * Translate message.
+     *
+     * @param string     $msg  Message to translate.
+     * @param array|null $args Message placeholder values.
      *
      * @return string
      */
-    public function getHtmlTemplate()
+    protected function __($msg, $args = null)
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
-    }
-
-    /**
-     * Render element.
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return sprintf(
-            $this->getHtmlTemplate(),
-            $this->getValue()
-        );
+        return $this->getDI()->get('trans')->_($msg, $args);
     }
 }

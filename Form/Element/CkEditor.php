@@ -20,9 +20,10 @@ namespace Engine\Form\Element;
 
 use Engine\Form\AbstractElement;
 use Engine\Form\ElementInterface;
+use Engine\Form;
 
 /**
- * Form element - Text area.
+ * Form element - CkEditor.
  *
  * @category  PhalconEye
  * @package   Engine\Form\Element
@@ -31,16 +32,33 @@ use Engine\Form\ElementInterface;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class CkEditor extends TextArea implements ElementInterface
 {
     /**
-     * Get element html template.
+     * Get allowed options for this element.
      *
-     * @return string
+     * @return array
      */
-    public function getHtmlTemplate()
+    public function getAllowedOptions()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
+        return array_merge(parent::getAllowedOptions(), ['elementOptions']);
+    }
+
+    /**
+     * Get element default attribute.
+     *
+     * @return array
+     */
+    public function getDefaultAttributes()
+    {
+        return array_merge(
+            parent::getDefaultAttributes(),
+            [
+                'data-widget' => 'ckeditor',
+                'data-name' => $this->getName(),
+                'data-options' => json_encode($this->getOption('elementOptions', []))
+            ]
+        );
     }
 
     /**
@@ -52,7 +70,7 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function setValue($value)
     {
-        return parent::setValue(htmlentities($value));
+        return AbstractElement::setValue($value);
     }
 
     /**
@@ -62,9 +80,7 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function render()
     {
-        return sprintf(
-            $this->getHtmlTemplate(),
-            $this->getValue()
-        );
+        $this->getDI()->get('assets')->addJs('assets/js/core/widgets/ckeditor.js');
+        return parent::render();
     }
 }

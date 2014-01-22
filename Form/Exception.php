@@ -16,55 +16,20 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Form;
 
-use Engine\Form\AbstractElement;
-use Engine\Form\ElementInterface;
+use Engine\Exception as EngineException;
 
 /**
- * Form element - Text area.
+ * Form exception class.
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class Exception extends EngineException
 {
-    /**
-     * Get element html template.
-     *
-     * @return string
-     */
-    public function getHtmlTemplate()
-    {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
-    }
-
-    /**
-     * Render element.
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return sprintf(
-            $this->getHtmlTemplate(),
-            $this->getValue()
-        );
-    }
 }

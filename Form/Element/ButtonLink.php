@@ -19,10 +19,11 @@
 namespace Engine\Form\Element;
 
 use Engine\Form\AbstractElement;
+use Engine\Form\Behaviour\TranslationBehaviour;
 use Engine\Form\ElementInterface;
 
 /**
- * Form element - Text area.
+ * Form element - ButtonLink.
  *
  * @category  PhalconEye
  * @package   Engine\Form\Element
@@ -31,8 +32,50 @@ use Engine\Form\ElementInterface;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class ButtonLink extends AbstractElement implements ElementInterface
 {
+    use TranslationBehaviour;
+
+    /**
+     * If element is need to be rendered in default layout.
+     *
+     * @return bool
+     */
+    public function useDefaultLayout()
+    {
+        return false;
+    }
+
+    /**
+     * If element is need to be rendered in default layout.
+     *
+     * @return bool
+     */
+    public function isIgnored()
+    {
+        return true;
+    }
+
+    /**
+     * Get allowed options for this element.
+     *
+     * @return array
+     */
+    public function getAllowedOptions()
+    {
+        return ['htmlTemplate', 'label'];
+    }
+
+    /**
+     * Get element default attribute.
+     *
+     * @return array
+     */
+    public function getDefaultAttributes()
+    {
+        return array_merge(parent::getDefaultAttributes(), ['class' => 'btn form_link_button']);
+    }
+
     /**
      * Get element html template.
      *
@@ -40,19 +83,7 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function getHtmlTemplate()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
+        return $this->getOption('htmlTemplate', '<a' . $this->_renderAttributes() . '>%s</a>');
     }
 
     /**
@@ -62,9 +93,17 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function render()
     {
+        $href = $this->getValue();
+        if ($href) {
+            $href = $this->getDI()->get('url')->get($href);
+        } else {
+            $href = 'javascript:;';
+        }
+        $this->setAttribute('href', $href);
+
         return sprintf(
             $this->getHtmlTemplate(),
-            $this->getValue()
+            $this->__($this->getOption('label'))
         );
     }
 }

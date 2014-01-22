@@ -18,11 +18,11 @@
 
 namespace Engine\Form\Element;
 
-use Engine\Form\AbstractElement;
+use Engine\Form\Behaviour\TranslationBehaviour;
 use Engine\Form\ElementInterface;
 
 /**
- * Form element - Text area.
+ * Form element - MultiCheckbox.
  *
  * @category  PhalconEye
  * @package   Engine\Form\Element
@@ -31,7 +31,7 @@ use Engine\Form\ElementInterface;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class MultiCheckbox extends Radio implements ElementInterface
 {
     /**
      * Get element html template.
@@ -40,31 +40,14 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function getHtmlTemplate()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
-    }
-
-    /**
-     * Render element.
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return sprintf(
-            $this->getHtmlTemplate(),
-            $this->getValue()
+        return $this->getOption(
+            'htmlTemplate',
+            '
+                <div class="form_element_checkbox">
+                    <input type="checkbox" value="%s"' . $this->_renderAttributes() . '%s%s/>
+                    <label>%s</label>
+                </div>
+            '
         );
     }
 }

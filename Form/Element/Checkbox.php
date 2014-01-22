@@ -19,10 +19,11 @@
 namespace Engine\Form\Element;
 
 use Engine\Form\AbstractElement;
+use Engine\Form\Behaviour\TranslationBehaviour;
 use Engine\Form\ElementInterface;
 
 /**
- * Form element - Text area.
+ * Form element - Checkbox.
  *
  * @category  PhalconEye
  * @package   Engine\Form\Element
@@ -31,16 +32,18 @@ use Engine\Form\ElementInterface;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class Checkbox extends AbstractElement implements ElementInterface
 {
+    use TranslationBehaviour;
+
     /**
-     * Get element html template.
+     * Get allowed options for this element.
      *
-     * @return string
+     * @return array
      */
-    public function getHtmlTemplate()
+    public function getAllowedOptions()
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
+        return array_merge(parent::getAllowedOptions(), ['checked']);
     }
 
     /**
@@ -52,7 +55,36 @@ class TextArea extends AbstractElement implements ElementInterface
      */
     public function setValue($value)
     {
-        return parent::setValue(htmlentities($value));
+        if ($this->_value === null) {
+            $this->_value = $value;
+        } else {
+            if ($this->_value == $value) {
+                $this->setOption('checked', 'checked');
+                $this->setOption('ignore', false);
+            } else {
+                $this->setOption('checked', null);
+                $this->setOption('ignore', true);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get element html template.
+     *
+     * @return string
+     */
+    public function getHtmlTemplate()
+    {
+        return $this->getOption(
+            'htmlTemplate',
+            '
+            <div class="form_element_radio">
+            <input type="checkbox" value="%s"' . $this->_renderAttributes() . '%s/>
+            </div>
+            '
+        );
     }
 
     /**
@@ -64,7 +96,8 @@ class TextArea extends AbstractElement implements ElementInterface
     {
         return sprintf(
             $this->getHtmlTemplate(),
-            $this->getValue()
+            $this->getValue(),
+            ($this->getOption('checked') ? ' checked="checked"' : '')
         );
     }
 }

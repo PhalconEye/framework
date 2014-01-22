@@ -16,55 +16,53 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Form;
 
-use Engine\Form\AbstractElement;
-use Engine\Form\ElementInterface;
+use Engine\Form;
 
 /**
- * Form element - Text area.
+ * Form element container interface.
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Form
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+interface ElementContainerInterface
 {
     /**
-     * Get element html template.
+     * Add element to container.
      *
-     * @return string
+     * @param AbstractElement $element Element object.
+     *
+     * @return mixed
      */
-    public function getHtmlTemplate()
-    {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
-    }
+    public function add(AbstractElement $element);
 
     /**
-     * Sets the element option.
+     * Get element by name.
      *
-     * @param string $value Element value.
+     * @param string $name Element name.
      *
-     * @return $this
+     * @return AbstractElement
      */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
-    }
+    public function get($name);
 
     /**
-     * Render element.
+     * Check if element is exists.
      *
-     * @return string
+     * @param string $name Element name.
+     *
+     * @return bool
      */
-    public function render()
-    {
-        return sprintf(
-            $this->getHtmlTemplate(),
-            $this->getValue()
-        );
-    }
+    public function has($name);
+
+    /**
+     * Get elements.
+     *
+     * @return AbstractElement[]
+     */
+    public function getElements();
 }

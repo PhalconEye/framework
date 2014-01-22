@@ -16,55 +16,47 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Helper;
 
-use Engine\Form\AbstractElement;
-use Engine\Form\ElementInterface;
+use Engine\Helper;
+use Phalcon\DI;
+use Phalcon\Tag;
 
 /**
- * Form element - Text area.
+ * Assets helper
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Helper
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class TextArea extends AbstractElement implements ElementInterface
+class Assets extends Helper
 {
     /**
-     * Get element html template.
+     * Add javascript file to assets.
      *
-     * @return string
+     * @param string $file       File path.
+     * @param string $collection Collection name.
+     *
+     * @return void
      */
-    public function getHtmlTemplate()
+    protected function _addJs($file, $collection = 'js')
     {
-        return $this->getOption('htmlTemplate', '<textarea' . $this->_renderAttributes() . '>%s</textarea>');
+        $this->getDI()->get('assets')->get($collection)->addJs($file);
     }
 
     /**
-     * Sets the element option.
+     * Add css file to assets.
      *
-     * @param string $value Element value.
+     * @param string $file       File path.
+     * @param string $collection Collection name.
      *
-     * @return $this
+     * @return void
      */
-    public function setValue($value)
+    protected function _addCss($file, $collection = 'css')
     {
-        return parent::setValue(htmlentities($value));
-    }
-
-    /**
-     * Render element.
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return sprintf(
-            $this->getHtmlTemplate(),
-            $this->getValue()
-        );
+        $this->getDI()->get('assets')->get($collection)->addCss($file);
     }
 }
