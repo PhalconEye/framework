@@ -72,16 +72,4 @@ abstract class AbstractInput extends AbstractElement implements ElementInterface
             $this->getValue()
         );
     }
-
-    /**
-     * Sets the element option.
-     *
-     * @param string $value Element value.
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return parent::setValue(htmlentities($value));
-    }
 }
