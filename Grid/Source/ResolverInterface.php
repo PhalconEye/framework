@@ -16,38 +16,37 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Grid\Source;
 
-use Engine\Behaviour\TranslationBehaviour;
-use Engine\Form\ElementInterface;
+use Engine\Form;
+use Engine\Grid\GridInterface;
+use Phalcon\Paginator\AdapterInterface;
 
 /**
- * Form element - MultiCheckbox.
+ * Source resolver interface.
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Grid
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013-2014 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class MultiCheckbox extends Radio implements ElementInterface
+interface ResolverInterface
 {
     /**
-     * Get element html template.
+     * Create resolver.
      *
-     * @return string
+     * @param GridInterface $grid Grid object.
      */
-    public function getHtmlTemplate()
-    {
-        return $this->getOption(
-            'htmlTemplate',
-            '
-                <div class="form_element_checkbox">
-                    <input type="checkbox" value="%s"' . $this->_renderAttributes() . '%s%s/>
-                    <label>%s</label>
-                </div>
-            '
-        );
-    }
+    public function __construct(GridInterface $grid);
+
+    /**
+     * Resolve source and return paginator.
+     *
+     * @param mixed $source Source.
+     *
+     * @return AdapterInterface
+     */
+    public function resolve($source);
 }

@@ -16,38 +16,33 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Behaviour;
 
-use Engine\Behaviour\TranslationBehaviour;
-use Engine\Form\ElementInterface;
+use Engine\DependencyInjection;
+use Phalcon\DI;
 
 /**
- * Form element - MultiCheckbox.
+ * Translation trait.
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Form\Behaviour
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013-2014 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class MultiCheckbox extends Radio implements ElementInterface
+trait TranslationBehaviour
 {
     /**
-     * Get element html template.
+     * Translate message.
+     *
+     * @param string     $msg  Message to translate.
+     * @param array|null $args Message placeholder values.
      *
      * @return string
      */
-    public function getHtmlTemplate()
+    protected function _($msg, $args = null)
     {
-        return $this->getOption(
-            'htmlTemplate',
-            '
-                <div class="form_element_checkbox">
-                    <input type="checkbox" value="%s"' . $this->_renderAttributes() . '%s%s/>
-                    <label>%s</label>
-                </div>
-            '
-        );
+        return $this->getDI()->get('trans')->_($msg, $args);
     }
 }

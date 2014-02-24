@@ -16,38 +16,62 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine\Form\Element;
+namespace Engine\Grid\Source;
 
-use Engine\Behaviour\TranslationBehaviour;
-use Engine\Form\ElementInterface;
+use Engine\DependencyInjection;
+use Engine\Grid\GridInterface;
+use Phalcon\DI;
+use Phalcon\Paginator\AdapterInterface;
 
 /**
- * Form element - MultiCheckbox.
+ * Abstract resolver
  *
  * @category  PhalconEye
- * @package   Engine\Form\Element
+ * @package   Engine\Form\Behaviour
  * @author    Ivan Vorontsov <ivan.vorontsov@phalconeye.com>
  * @copyright 2013-2014 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-class MultiCheckbox extends Radio implements ElementInterface
+abstract class AbstractResolver implements ResolverInterface
 {
     /**
-     * Get element html template.
+     * Grid object.
      *
-     * @return string
+     * @var GridInterface
      */
-    public function getHtmlTemplate()
+    protected $_grid;
+
+    /**
+     * Create resolver.
+     *
+     * @param GridInterface $grid Grid object.
+     */
+    public function __construct(GridInterface $grid)
     {
-        return $this->getOption(
-            'htmlTemplate',
-            '
-                <div class="form_element_checkbox">
-                    <input type="checkbox" value="%s"' . $this->_renderAttributes() . '%s%s/>
-                    <label>%s</label>
-                </div>
-            '
-        );
+        $this->_grid = $grid;
+    }
+
+    /**
+     * Resolve source and return paginator.
+     *
+     * @param mixed $source Source.
+     *
+     * @throws \Engine\Grid\Exception
+     * @return AdapterInterface
+     */
+    abstract public function resolve($source);
+
+    /**
+     * Get request param.
+     *
+     * @param string $name    Param name.
+     * @param mixed  $default Default value for param.
+     *
+     * @return mixed
+     */
+    protected function _getParam($name, $default = null)
+    {
+        return $this->_grid->getDI()->getRequest()->get($name, null, $default);
     }
 }
