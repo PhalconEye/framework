@@ -16,14 +16,15 @@
   +------------------------------------------------------------------------+
 */
 
-namespace Engine;
+namespace Engine\Behaviour;
 
+use Engine\Behaviour\DIBehaviour;
 use Phalcon\DI;
-use Phalcon\DiInterface;
-use Phalcon\Events\Manager;
+use Phalcon\Mvc\View as PhalconView;
+use Phalcon\Mvc\View\Engine\Volt;
 
 /**
- * Bootstrap interface.
+ * View behaviour.
  *
  * @category  PhalconEye
  * @package   Engine
@@ -32,20 +33,22 @@ use Phalcon\Events\Manager;
  * @license   New BSD License
  * @link      http://phalconeye.com/
  */
-interface BootstrapInterface
+trait ViewBehaviour
 {
     /**
-     * Create Bootstrap.
+     * Resolve view path.
      *
-     * @param DiInterface $di Dependency injection.
-     * @param Manager     $em Events manager.
+     * @param string $viewPath Path to view.
+     * @param null   $module   Module name.
+     *
+     * @return string
      */
-    public function __construct($di, $em);
+    public function resolveView($viewPath, $module = null)
+    {
+        if (!$module) {
+            return $viewPath;
+        }
 
-    /**
-     * Register module services.
-     *
-     * @return void
-     */
-    public function initialize();
+        return ucfirst($module) . '/View/' . $viewPath;
+    }
 }
