@@ -103,7 +103,7 @@ class Metadata implements StrategyInterface
                 /**
                  * Check for the 'nullable' parameter in the 'Column' annotation
                  */
-                if (!$collection->has('Identity') && !empty($arguments['nullable'])) {
+                if (!$collection->has('Identity') && !empty($arguments['nullable']) && $arguments['nullable'] == false) {
                     $nullables[] = $columnName;
                 }
 
@@ -296,7 +296,7 @@ class Metadata implements StrategyInterface
             /**
              * Check for the 'nullable' parameter in the 'Column' annotation.
              */
-            if (!$collection->has('Identity') && !empty($arguments['nullable'])) {
+            if (!$collection->has('Identity') && !empty($arguments['nullable']) && $arguments['nullable'] == false) {
                 $modelInfo['columns'][$columnName]['nullable'] = $arguments['nullable'];
             }
 
