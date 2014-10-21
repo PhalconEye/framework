@@ -71,10 +71,13 @@ trait ElementsBehaviour
 
             /** @var View $view */
             $view = $this->getDI()->get('view');
+            $curViewDir = $view->getViewsDir ();
+            $view->setViewsDir(ROOT_PATH . '/app/modules/');
             ob_start();
             $view->partial($value, $partial);
             $html = ob_get_contents();
             ob_end_clean();
+            $view->setViewsDir($curViewDir);
             $element->setValue($html);
         } else {
             $element->setValue($value);
