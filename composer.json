@@ -1,6 +1,7 @@
 {
     "name": "phalconeye/framework",
-    "description": "Phalcon Eye Core Framework",
+    "type": "phalconeye-framework",
+    "description": "Phalcon Eye Engine Framework",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -9,17 +10,18 @@
         }
     ],
     "minimum-stability": "dev",
-	"extra": {
-        "branch-alias": {
-            "dev-master": "0.5-dev"
-        }
-    },
     "require": {
-
+        "php" : ">=5.4.20"
     },
     "autoload": {
         "psr-4": {
             "Engine\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "engine",
+        "branch-alias": {
+            "dev-master": "0.5-dev"
         }
     }
 }

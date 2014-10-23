@@ -240,24 +240,16 @@ trait ApplicationInitialization
      */
     protected function _initRouter($di, $config)
     {
-        $defaultModuleName = ucfirst(Application::SYSTEM_DEFAULT_MODULE);
+        $defaultModuleName = ucfirst(Application::DEFAULT_MODULE_CORE);
 
         // Check installation.
         if (!$config->installed) {
             $router = new RouterAnnotations(false);
-
-            // Use $_SERVER['REQUEST_URI'] (NGINX)
-            if (!isset($_GET['_url'])) {
-                $router->setUriSource(Router::URI_SOURCE_SERVER_REQUEST_URI);
-                // Remove extra slashes from url
-                $router->removeExtraSlashes(true);
-            }
-
-            $router->setDefaultModule(Application::SYSTEM_DEFAULT_MODULE);
+            $router->setDefaultModule(Application::DEFAULT_MODULE_CORE);
             $router->setDefaultNamespace($defaultModuleName . '\Controller');
             $router->setDefaultController("Install");
             $router->setDefaultAction("index");
-            $router->addModuleResource(Application::SYSTEM_DEFAULT_MODULE, $defaultModuleName . '\Controller\Install');
+            $router->addModuleResource(Application::DEFAULT_MODULE_CORE, $defaultModuleName . '\Controller\Install');
             $di->set('installationRequired', true);
             $di->set('router', $router);
 
@@ -275,16 +267,8 @@ trait ApplicationInitialization
 
             // Use the annotations router.
             $router = new RouterAnnotations(true);
-
-            // Use $_SERVER['REQUEST_URI'] (NGINX)
-            if (!isset($_GET['_url'])) {
-                $router->setUriSource(Router::URI_SOURCE_SERVER_REQUEST_URI);
-                // Remove extra slashes from url
-                $router->removeExtraSlashes(true);
-            }
-
-            $router->setDefaultModule(Application::SYSTEM_DEFAULT_MODULE);
-            $router->setDefaultNamespace(ucfirst(Application::SYSTEM_DEFAULT_MODULE) . '\Controller');
+            $router->setDefaultModule(Application::DEFAULT_MODULE_CORE);
+            $router->setDefaultNamespace(ucfirst(Application::DEFAULT_MODULE_CORE) . '\Controller');
             $router->setDefaultController("Index");
             $router->setDefaultAction("index");
 
