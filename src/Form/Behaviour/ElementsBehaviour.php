@@ -512,7 +512,7 @@ trait ElementsBehaviour
         array $attributes = []
     )
     {
-        $element = new Form\Element\MultiCheckbox($name, $options, $attributes);
+        $element = new Form\Element\MultiCheckbox($name . '[]', $options, $attributes);
 
         if (!$label) {
             $label = ucfirst($name);
