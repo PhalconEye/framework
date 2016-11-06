@@ -3,7 +3,7 @@
   +------------------------------------------------------------------------+
   | PhalconEye CMS                                                         |
   +------------------------------------------------------------------------+
-  | Copyright (c) 2013-2014 PhalconEye Team (http://phalconeye.com/)       |
+  | Copyright (c) 2013-2016 PhalconEye Team (http://phalconeye.com/)       |
   +------------------------------------------------------------------------+
   | This source file is subject to the New BSD License that is bundled     |
   | with this package in the file LICENSE.txt.                             |
@@ -27,7 +27,7 @@ use Phalcon\DiInterface;
  * @category  PhalconEye
  * @package   Engine
  * @author    Ivan Vorontsov <vorontsov@phalconeye.com>
- * @copyright 2013-2014 PhalconEye Team
+ * @copyright 2013-2016 PhalconEye Team
  * @license   New BSD License
  * @link      http://phalconeye.com/
  *
@@ -89,5 +89,48 @@ trait DIBehaviour
     public function getDI()
     {
         return $this->_di;
+    }
+  
+    /**
+     * Trying to obtain the dependence from the Dependency Injection Container.
+     *
+     * <code>
+     * use Engine\Behaviour\DIBehaviour;
+     *
+     * class A {
+     *     // Some logic
+     * }
+     *
+     * class B extends A {
+     *     use DIBehaviour {
+     *         DIBehaviour::__construct as protected injectDI;
+     *     }
+     *
+     *     public function __construct()
+     *     {
+     *         $this->injectDI();
+     *     }
+     * }
+     *
+     * $a = new A();
+     * $a->getLogger('db.log');
+     * </code>
+     *
+     * @param string $func
+     * @param mixed $argv
+     *
+     * @return mixed
+     */
+    public function __call($func, $argv)
+    {
+        $dependency = lcfirst(substr($func, 3));
+
+        if ($this->getDI()->has($dependency)) {
+            return $this->getDI()->getShared($dependency, $argv);
+        }
+
+        throw new \BadMethodCallException(
+            sprintf('Call to undefined method %s', get_class($this) . '::' . $func)
+        );
     }
 }
